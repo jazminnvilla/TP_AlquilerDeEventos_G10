@@ -1,7 +1,6 @@
 <<<<<<< HEAD
 # TP_AlquilerDeEventos_G10
-=======
-TP\_AlquilerDeEventos\_G10
+
 
 "Sistema de gestión de alquileres de elementos para eventos"
 
@@ -9,8 +8,6 @@ TP\_AlquilerDeEventos\_G10
 
 \TP\_AlquilerDeEventos\_G10
 
-
->>>>>>> 705e779a4e12f1df1126b1c0d2500ba49405e43c
 
 Sistema de gestión de alquileres de elementos para eventos.
 
