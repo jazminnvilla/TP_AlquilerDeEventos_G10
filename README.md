@@ -1,4 +1,16 @@
+<<<<<<< HEAD
 # TP_AlquilerDeEventos_G10
+=======
+TP\_AlquilerDeEventos\_G10
+
+"Sistema de gestión de alquileres de elementos para eventos"
+
+
+
+\TP\_AlquilerDeEventos\_G10
+
+
+>>>>>>> 705e779a4e12f1df1126b1c0d2500ba49405e43c
 
 Sistema de gestión de alquileres de elementos para eventos.
 
@@ -6,7 +18,11 @@ Sistema de gestión de alquileres de elementos para eventos.
 
 ---
 
+<<<<<<< HEAD
 ## Descripción del sistema
+=======
+Integrantes: [Celeste Ball] - [Jazmín Villa]
+>>>>>>> 705e779a4e12f1df1126b1c0d2500ba49405e43c
 
 Sistema de escritorio para la gestión de un negocio de alquiler de elementos para eventos, como cumpleaños, casamientos o reuniones.
 
