@@ -102,3 +102,51 @@ Sistema de escritorio para la gestión de un negocio de alquiler de elementos pa
 
 5\. \*\*Alquileres pendientes de devolución\*\*: alquileres en estado Entregado cuya fecha de fin ya pasó.
 
+
+
+\## Diagrama de clases
+
+
+
+!\[Diagrama de clases](docs/diagrama\_clases.png)
+
+
+
+\## Arquitectura e integración de capas
+
+
+
+La solución se divide en dos proyectos:
+
+
+
+\- \*\*AlquilerDeEventos.Datos (Biblioteca de clases):\*\* contiene los modelos (las clases del diagrama), el contexto de Entity Framework Core (AlquileresContext, que representa la conexión con la base de datos) y los repositorios, que se encargan de guardar y consultar los datos y de aplicar las reglas del negocio, como la verificación de disponibilidad.
+
+\- \*\*AlquilerDeEventos.UI (Aplicación WinForms):\*\* contiene los formularios. Muestra la información, recibe los datos que ingresa el usuario y valida que estén completos y sean correctos. No accede directamente a la base de datos, sino que lo hace a través de los repositorios.
+
+
+
+\### Ejemplo: cómo se guarda una reserva
+
+
+
+1\. \*\*Interfaz (WinForms):\*\* el cliente selecciona las fechas, elige los elementos y sus cantidades, y presiona "Reservar". El formulario valida que los campos obligatorios estén completos, que las cantidades sean números mayores a cero y que la fecha de fin no sea anterior a la de inicio.
+
+2\. \*\*Interfaz → Biblioteca de clases:\*\* el formulario crea un objeto Alquiler con sus DetalleAlquiler y se lo envía al repositorio llamando a AlquilerRepository.Agregar(alquiler).
+
+3\. \*\*Repositorio:\*\* verifica que haya unidades disponibles de cada elemento para esas fechas. Si no alcanzan, devuelve un error y el formulario se lo muestra al cliente. Si hay disponibilidad, calcula el total y asigna el estado Pendiente.
+
+4\. \*\*Contexto (Entity Framework Core):\*\* el repositorio agrega el alquiler al AlquileresContext y ejecuta SaveChanges().
+
+5\. \*\*Base de datos:\*\* Entity Framework Core traduce la operación a sentencias INSERT y guarda el alquiler y sus detalles en las tablas correspondientes.
+
+6\. \*\*Respuesta:\*\* el formulario informa que la reserva se registró y abre WhatsApp con el detalle para coordinar el pago.
+
+
+
+Cuando el empleado confirma la reserva, el recorrido es el mismo: el formulario llama al repositorio, que ejecuta el método Confirmar del alquiler y guarda el cambio con SaveChanges().
+
+
+
+
+
