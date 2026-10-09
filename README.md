@@ -1,10 +1,10 @@
-# TP\_AlquilerDeEventos\_G10
+TP\_AlquilerDeEventos\_G10
 
 "Sistema de gestión de alquileres de elementos para eventos"
 
 
 
-\# TP\_AlquilerDeEventos\_G10
+\TP\_AlquilerDeEventos\_G10
 
 
 
@@ -12,7 +12,7 @@ Sistema de gestión de alquileres de elementos para eventos.
 
 
 
-\*\*Integrantes:\*\* \[Celeste Ball] - \[Jazmín Villa]
+Integrantes: [Celeste Ball] - [Jazmín Villa]
 
 
 
