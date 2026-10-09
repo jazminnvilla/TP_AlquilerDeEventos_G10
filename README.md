@@ -15,7 +15,7 @@ Sistema de gestión de alquileres de elementos para eventos.
 
 
 ## Descripción del sistema
-=======
+
 Integrantes: [Celeste Ball] - [Jazmín Villa]
 
 
