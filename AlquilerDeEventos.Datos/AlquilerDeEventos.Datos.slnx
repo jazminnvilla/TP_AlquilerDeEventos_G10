@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="../AlquilerDeEeventos.WinForms/AlquilerDeEeventos.WinForms.csproj" />
+  <Project Path="AlquilerDeEventos.Datos.csproj" />
+</Solution>
