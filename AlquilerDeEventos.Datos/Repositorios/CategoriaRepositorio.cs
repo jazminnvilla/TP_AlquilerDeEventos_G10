@@ -1,6 +1,7 @@
 ﻿
 using AlquilerDeEventos.Datos.Contexto;
 using AlquilerDeEventos.Datos.Modelo;
+using Microsoft.EntityFrameworkCore;
 
 namespace AlquilerDeEventos.Datos.Repositorios
 {
@@ -23,14 +24,22 @@ namespace AlquilerDeEventos.Datos.Repositorios
         // CONSULTA
         public List<Categoria> ObtenerTodos()
         {
-            return _context.Categorias.ToList();
+            return _context.Categorias
+                .AsNoTracking()
+                .ToList();
         }
 
-        // MODIFICACIÓN
+        // MODIFICACION
         public void Modificar(Categoria categoria)
         {
-            _context.Categorias.Update(categoria);
-            _context.SaveChanges();
+            var categoriaExistente = _context.Categorias
+                .FirstOrDefault(c => c.Id == categoria.Id);
+
+            if (categoriaExistente != null)
+            {
+                categoriaExistente.Nombre = categoria.Nombre;
+                _context.SaveChanges();
+            }
         }
 
         // BAJA

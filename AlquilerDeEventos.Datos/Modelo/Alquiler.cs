@@ -26,23 +26,32 @@ namespace AlquilerDeEventos.Datos.Modelo
 
         public List<DetalleAlquiler> DetallesAlquiler { get; set; } = new();
 
+        // REGISTRAR DEVOLUCION
         public void RegistrarDevolucion(DateTime fecha, decimal recargo)
         {
             if (Estado != "Entregado")
+            {
                 throw new InvalidOperationException(
                     "El alquiler debe estar entregado para registrar su devolución.");
+            }
 
             if (fecha < FechaInicio)
+            {
                 throw new ArgumentException(
                     "La fecha de devolución no puede ser anterior al inicio.");
+            }
 
             if (recargo < 0)
+            {
                 throw new ArgumentException(
                     "El recargo no puede ser negativo.");
+            }
 
             if (fecha <= FechaFin && recargo > 0)
+            {
                 throw new ArgumentException(
                     "No corresponde un recargo si la devolución fue a tiempo.");
+            }
 
             FechaDevolucionReal = fecha;
             Recargo = recargo;

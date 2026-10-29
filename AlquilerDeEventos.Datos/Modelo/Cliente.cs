@@ -1,5 +1,4 @@
-﻿
-namespace AlquilerDeEventos.Datos.Modelo
+﻿namespace AlquilerDeEventos.Datos.Modelo
 {
     public class Cliente : Persona
     {

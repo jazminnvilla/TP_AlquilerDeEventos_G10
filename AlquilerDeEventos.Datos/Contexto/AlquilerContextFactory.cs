@@ -9,10 +9,12 @@ namespace AlquilerDeEventos.Datos.Contexto
     {
         public AlquileresContext CreateDbContext(string[] args)
         {
-            var opciones =
-                new DbContextOptionsBuilder<AlquileresContext>()
-                .UseSqlServer(
-                    @"Server=(localdb)\MSSQLLocalDB;Database=AlquilerDeEventosDB;Trusted_Connection=True;TrustServerCertificate=True;")
+            string ruta = Path.Combine(
+                AppContext.BaseDirectory,
+                "AlquilerDeEventos.db");
+
+            var opciones = new DbContextOptionsBuilder<AlquileresContext>()
+                .UseSqlite($"Data Source={ruta}")
                 .Options;
 
             return new AlquileresContext(opciones);

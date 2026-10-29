@@ -12,7 +12,7 @@ namespace AlquilerDeEeventos.WinForms
             ApplicationConfiguration.Initialize();
 
             var opciones = new DbContextOptionsBuilder<AlquileresContext>()
-                .UseSqlServer(
+                .UseSqlite(
                     @"Server=(localdb)\MSSQLLocalDB;Database=AlquilerDeEventosDB;Trusted_Connection=True;TrustServerCertificate=True;")
                 .Options;
 

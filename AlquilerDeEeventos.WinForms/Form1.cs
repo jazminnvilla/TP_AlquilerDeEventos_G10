@@ -1,4 +1,5 @@
 
+using AlquilerDeEventos.Datos;
 using AlquilerDeEventos.Datos.Contexto;
 using AlquilerDeEventos.Datos.Modelo;
 using AlquilerDeEventos.Datos.Repositorios;
@@ -17,12 +18,20 @@ namespace AlquilerDeEeventos.WinForms
         {
             InitializeComponent();
 
+            string ruta = Path.Combine(
+                AppContext.BaseDirectory,
+                "AlquilerDeEventos.db");
+
             var opciones = new DbContextOptionsBuilder<AlquileresContext>()
-                .UseSqlServer(
-                    @"Server=(localdb)\MSSQLLocalDB;Database=AlquilerDeEventosDB;Trusted_Connection=True;TrustServerCertificate=True;")
+                .UseSqlite($"Data Source={ruta}")
                 .Options;
 
             _context = new AlquileresContext(opciones);
+
+            // Cargamos datos ficticios para probar los reportes.
+            // La clase DatosDePrueba evita repetir la carga.
+            DatosDePrueba.Cargar(_context);
+
             _repositorio = new CategoriaRepositorio(_context);
 
             btnAgregar.Click += btnAgregar_Click;
@@ -39,6 +48,31 @@ namespace AlquilerDeEeventos.WinForms
                 DataGridViewAutoSizeColumnsMode.Fill;
 
             CargarCategorias();
+
+            // Creamos el botón Ver reportes desde código.
+            Button btnVerReportes = new Button();
+
+            btnVerReportes.Name = "btnVerReportes";
+            btnVerReportes.Text = "Ver reportes";
+            btnVerReportes.Size = new Size(140, 35);
+
+            btnVerReportes.Location = new Point(
+                dgvCategorias.Left,
+                dgvCategorias.Bottom + 15
+            );
+
+            int alturaNecesaria = btnVerReportes.Bottom + 20;
+
+            if (ClientSize.Height < alturaNecesaria)
+            {
+                ClientSize = new Size(
+                    ClientSize.Width,
+                    alturaNecesaria
+                );
+            }
+
+            Controls.Add(btnVerReportes);
+            btnVerReportes.Click += btnVerReportes_Click;
         }
 
         private void CargarCategorias()
@@ -146,6 +180,15 @@ namespace AlquilerDeEeventos.WinForms
             {
                 categoriaSeleccionadaId = categoria.Id;
                 txtNombre.Text = categoria.Nombre;
+            }
+        }
+
+        private void btnVerReportes_Click(
+            object? sender, EventArgs e)
+        {
+            using (FormReportes ventana = new FormReportes())
+            {
+                ventana.ShowDialog();
             }
         }
 
