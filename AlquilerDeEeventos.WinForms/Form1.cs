@@ -1,38 +1,27 @@
 
-using AlquilerDeEventos.Datos;
-using AlquilerDeEventos.Datos.Contexto;
 using AlquilerDeEventos.Datos.Modelo;
 using AlquilerDeEventos.Datos.Repositorios;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AlquilerDeEeventos.WinForms
 {
     public partial class Form1 : Form
     {
-        private readonly AlquileresContext _context;
         private readonly CategoriaRepositorio _repositorio;
+        private readonly IServiceScopeFactory _scopeFactory;
 
         private int categoriaSeleccionadaId = 0;
 
-        public Form1()
+        public Form1(
+            CategoriaRepositorio repositorio,
+            IServiceScopeFactory scopeFactory)
         {
             InitializeComponent();
 
-            string ruta = Path.Combine(
-                AppContext.BaseDirectory,
-                "AlquilerDeEventos.db");
-
-            var opciones = new DbContextOptionsBuilder<AlquileresContext>()
-                .UseSqlite($"Data Source={ruta}")
-                .Options;
-
-            _context = new AlquileresContext(opciones);
-
-            // Cargamos datos ficticios para probar los reportes.
-            // La clase DatosDePrueba evita repetir la carga.
-            DatosDePrueba.Cargar(_context);
-
-            _repositorio = new CategoriaRepositorio(_context);
+            // Recibimos las dependencias desde Program.cs.
+            _repositorio = repositorio;
+            _scopeFactory = scopeFactory;
 
             btnAgregar.Click += btnAgregar_Click;
             btnModificar.Click += btnModificar_Click;
@@ -49,7 +38,7 @@ namespace AlquilerDeEeventos.WinForms
 
             CargarCategorias();
 
-            // Creamos el botón Ver reportes desde código.
+            // Botón para abrir los reportes.
             Button btnVerReportes = new Button();
 
             btnVerReportes.Name = "btnVerReportes";
@@ -183,13 +172,17 @@ namespace AlquilerDeEeventos.WinForms
             }
         }
 
+        // Abrimos los reportes utilizando inyección de dependencias.
         private void btnVerReportes_Click(
             object? sender, EventArgs e)
         {
-            using (FormReportes ventana = new FormReportes())
-            {
-                ventana.ShowDialog();
-            }
+            using var scope = _scopeFactory.CreateScope();
+
+            using FormReportes ventana =
+                scope.ServiceProvider
+                    .GetRequiredService<FormReportes>();
+
+            ventana.ShowDialog();
         }
 
         private void Limpiar()
@@ -197,12 +190,6 @@ namespace AlquilerDeEeventos.WinForms
             txtNombre.Clear();
             categoriaSeleccionadaId = 0;
             dgvCategorias.ClearSelection();
-        }
-
-        protected override void OnFormClosed(FormClosedEventArgs e)
-        {
-            _context.Dispose();
-            base.OnFormClosed(e);
         }
     }
 }

@@ -1,32 +1,19 @@
 ﻿
-using AlquilerDeEventos.Datos.Contexto;
 using AlquilerDeEventos.Datos.Repositorios;
-using Microsoft.EntityFrameworkCore;
 
 namespace AlquilerDeEeventos.WinForms
 {
     public partial class FormReportes : Form
     {
-        private readonly AlquileresContext _context;
         private readonly ReporteRepositorio _reportes;
 
-        public FormReportes()
+        public FormReportes(ReporteRepositorio reportes)
         {
             InitializeComponent();
 
-            // Usamos la misma ubicación SQLite que Form1.
-            string ruta = Path.Combine(
-                AppContext.BaseDirectory,
-                "AlquilerDeEventos.db");
+            // Recibimos el repositorio por inyección.
+            _reportes = reportes;
 
-            var opciones = new DbContextOptionsBuilder<AlquileresContext>()
-                .UseSqlite($"Data Source={ruta}")
-                .Options;
-
-            _context = new AlquileresContext(opciones);
-            _reportes = new ReporteRepositorio(_context);
-
-            // Cargamos las cinco opciones del ComboBox.
             cbmReportes.Items.Clear();
             cbmReportes.Items.Add("Disponibilidad por fecha");
             cbmReportes.Items.Add("Reservas pendientes");
@@ -36,12 +23,10 @@ namespace AlquilerDeEeventos.WinForms
 
             cbmReportes.SelectedIndex = 0;
 
-            // Configuración de la tabla.
             dgvReportes.ReadOnly = true;
             dgvReportes.AllowUserToAddRows = false;
             dgvReportes.AllowUserToDeleteRows = false;
 
-            // Conexión de los eventos.
             btnReportes.Click += btnReportes_Click;
             cbmReportes.SelectedIndexChanged +=
                 cbmReportes_SelectedIndexChanged;
@@ -61,8 +46,6 @@ namespace AlquilerDeEeventos.WinForms
         {
             int opcion = cbmReportes.SelectedIndex;
 
-            // Disponibilidad: una fecha.
-            // Alquileres entre fechas: dos fechas.
             dtpDesde.Enabled = opcion == 0 || opcion == 2;
             dtpHasta.Enabled = opcion == 2;
         }
@@ -121,12 +104,6 @@ namespace AlquilerDeEeventos.WinForms
                 MessageBox.Show(
                     "No se pudo generar el reporte: " + ex.Message);
             }
-        }
-
-        protected override void OnFormClosed(FormClosedEventArgs e)
-        {
-            _context.Dispose();
-            base.OnFormClosed(e);
         }
     }
 }

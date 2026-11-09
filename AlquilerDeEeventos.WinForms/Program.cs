@@ -1,6 +1,8 @@
 
 using AlquilerDeEventos.Datos.Contexto;
+using AlquilerDeEventos.Datos.Repositorios;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AlquilerDeEeventos.WinForms
 {
@@ -11,14 +13,33 @@ namespace AlquilerDeEeventos.WinForms
         {
             ApplicationConfiguration.Initialize();
 
-            var opciones = new DbContextOptionsBuilder<AlquileresContext>()
-                .UseSqlite(
-                    @"Server=(localdb)\MSSQLLocalDB;Database=AlquilerDeEventosDB;Trusted_Connection=True;TrustServerCertificate=True;")
-                .Options;
+            //Configuracion la inyección de dependencias
+            var servicios = new ServiceCollection();
 
-            using var contexto = new AlquileresContext(opciones);
+            // Configuramos SQLite.
+            string ruta = Path.Combine(
+                AppContext.BaseDirectory,
+                "AlquilerDeEventos.db");
 
-            Application.Run(new Form1());
+            servicios.AddDbContext<AlquileresContext>(opciones =>
+                opciones.UseSqlite($"Data Source={ruta}"));
+
+            // Registrar los repos
+            servicios.AddScoped<CategoriaRepositorio>();
+            servicios.AddScoped<ReporteRepositorio>();
+
+            // Registrar los formularios
+            servicios.AddScoped<Form1>();
+            servicios.AddScoped<FormReportes>();
+
+            // Construir el proveedor de servicios
+            using var proveedor = servicios.BuildServiceProvider();
+
+            // Crear el ámbito de la ventana principal
+            using var scope = proveedor.CreateScope();
+
+            Application.Run(
+                scope.ServiceProvider.GetRequiredService<Form1>());
         }
     }
 }
