@@ -19,7 +19,7 @@ namespace AlquilerDeEeventos.WinForms
         {
             InitializeComponent();
 
-            // Recibimos las dependencias desde Program.cs.
+            // Dependencias recibidas desde Program.cs.
             _repositorio = repositorio;
             _scopeFactory = scopeFactory;
 
@@ -144,10 +144,18 @@ namespace AlquilerDeEeventos.WinForms
                     Limpiar();
                     CargarCategorias();
                 }
+                catch (InvalidOperationException ex)
+                {
+                    MessageBox.Show(
+                        ex.Message,
+                        "No se puede eliminar",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                }
                 catch (DbUpdateException)
                 {
                     MessageBox.Show(
-                        "No se puede eliminar porque tiene elementos relacionados.");
+                        "No se pudo eliminar la categoría por sus relaciones con otros registros.");
                 }
             }
         }
@@ -172,7 +180,7 @@ namespace AlquilerDeEeventos.WinForms
             }
         }
 
-        // Abrimos los reportes utilizando inyección de dependencias.
+        // Abrimos reportes con inyección de dependencias.
         private void btnVerReportes_Click(
             object? sender, EventArgs e)
         {
@@ -192,9 +200,9 @@ namespace AlquilerDeEeventos.WinForms
             dgvCategorias.ClearSelection();
         }
 
+        // Se conserva por compatibilidad con el diseñador.
         private void btnListar_Click_1(object sender, EventArgs e)
         {
-
         }
     }
 }
