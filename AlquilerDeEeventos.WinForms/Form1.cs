@@ -191,5 +191,10 @@ namespace AlquilerDeEeventos.WinForms
             categoriaSeleccionadaId = 0;
             dgvCategorias.ClearSelection();
         }
+
+        private void btnListar_Click_1(object sender, EventArgs e)
+        {
+
+        }
     }
 }

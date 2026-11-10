@@ -13,31 +13,36 @@ namespace AlquilerDeEeventos.WinForms
         {
             ApplicationConfiguration.Initialize();
 
-            //Configuracion la inyección de dependencias
+            // Configuración de inyección de dependencias.
             var servicios = new ServiceCollection();
 
-            // Configuramos SQLite.
+            // Ruta de la base de datos SQLite.
             string ruta = Path.Combine(
                 AppContext.BaseDirectory,
                 "AlquilerDeEventos.db");
 
+            // Registro del contexto.
             servicios.AddDbContext<AlquileresContext>(opciones =>
                 opciones.UseSqlite($"Data Source={ruta}"));
 
-            // Registrar los repos
+            // Registro de repositorios.
             servicios.AddScoped<CategoriaRepositorio>();
             servicios.AddScoped<ReporteRepositorio>();
 
-            // Registrar los formularios
+            // Registro de formularios.
             servicios.AddScoped<Form1>();
             servicios.AddScoped<FormReportes>();
 
-            // Construir el proveedor de servicios
             using var proveedor = servicios.BuildServiceProvider();
-
-            // Crear el ámbito de la ventana principal
             using var scope = proveedor.CreateScope();
 
+            // Crear o actualizar las tablas mediante migraciones.
+            var contexto = scope.ServiceProvider
+                .GetRequiredService<AlquileresContext>();
+
+            contexto.Database.Migrate();
+
+            // Iniciar el formulario principal.
             Application.Run(
                 scope.ServiceProvider.GetRequiredService<Form1>());
         }
